@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import ttk
 import heapq
 
 
@@ -31,13 +31,14 @@ class DijkstraVisualizer:
 
     def __init__(self, root):
         """
-        Initializes the GUI, creates the maze,
-        information panel and control buttons.
+        Initializes the GUI, maze, labels,
+        buttons, calculation table and
+        Dijkstra search variables.
         """
 
         self.root = root
         self.root.title("Dijkstra Maze Visualizer")
-        self.root.geometry("1100x680")
+        self.root.geometry("1450x720")
 
         self.cell_size = 85
 
@@ -59,6 +60,7 @@ class DijkstraVisualizer:
             text="Dijkstra's Algorithm - Maze Visualizer",
             font=("Arial", 20, "bold")
         )
+
         title.pack(pady=10)
 
         # -------------------------------------------------
@@ -66,6 +68,7 @@ class DijkstraVisualizer:
         # -------------------------------------------------
 
         main_frame = tk.Frame(root)
+
         main_frame.pack()
 
         # -------------------------------------------------
@@ -91,6 +94,7 @@ class DijkstraVisualizer:
         # -------------------------------------------------
 
         info_frame = tk.Frame(main_frame)
+
         info_frame.grid(
             row=0,
             column=1,
@@ -102,49 +106,67 @@ class DijkstraVisualizer:
             info_frame,
             text="Press Start Dijkstra",
             font=("Arial", 14, "bold"),
-            wraplength=320
+            wraplength=300
         )
-        self.status_label.pack(pady=10)
+
+        self.status_label.pack(
+            pady=10
+        )
 
         self.current_label = tk.Label(
             info_frame,
             text="Current Node: None",
             font=("Arial", 12)
         )
-        self.current_label.pack(pady=5)
+
+        self.current_label.pack(
+            pady=5
+        )
 
         self.current_cost_label = tk.Label(
             info_frame,
             text="Current Cost: -",
             font=("Arial", 12)
         )
-        self.current_cost_label.pack(pady=5)
+
+        self.current_cost_label.pack(
+            pady=5
+        )
 
         self.queue_label = tk.Label(
             info_frame,
             text="Priority Queue: []",
             font=("Arial", 10),
-            wraplength=330,
+            wraplength=300,
             justify="left"
         )
-        self.queue_label.pack(pady=10)
+
+        self.queue_label.pack(
+            pady=10
+        )
 
         self.visited_label = tk.Label(
             info_frame,
             text="Explored Nodes: 0",
             font=("Arial", 11)
         )
-        self.visited_label.pack(pady=5)
+
+        self.visited_label.pack(
+            pady=5
+        )
 
         self.final_cost_label = tk.Label(
             info_frame,
             text="Minimum Cost: -",
             font=("Arial", 13, "bold")
         )
-        self.final_cost_label.pack(pady=10)
+
+        self.final_cost_label.pack(
+            pady=10
+        )
 
         # -------------------------------------------------
-        # Buttons
+        # Start Button
         # -------------------------------------------------
 
         self.start_button = tk.Button(
@@ -154,7 +176,14 @@ class DijkstraVisualizer:
             width=18,
             command=self.start_dijkstra
         )
-        self.start_button.pack(pady=10)
+
+        self.start_button.pack(
+            pady=5
+        )
+
+        # -------------------------------------------------
+        # Pause / Resume Button
+        # -------------------------------------------------
 
         self.pause_button = tk.Button(
             info_frame,
@@ -164,7 +193,14 @@ class DijkstraVisualizer:
             command=self.toggle_pause,
             state="disabled"
         )
-        self.pause_button.pack(pady=5)
+
+        self.pause_button.pack(
+            pady=5
+        )
+
+        # -------------------------------------------------
+        # Reset Button
+        # -------------------------------------------------
 
         self.reset_button = tk.Button(
             info_frame,
@@ -173,7 +209,10 @@ class DijkstraVisualizer:
             width=18,
             command=self.reset
         )
-        self.reset_button.pack(pady=5)
+
+        self.reset_button.pack(
+            pady=5
+        )
 
         # -------------------------------------------------
         # Legend
@@ -183,19 +222,120 @@ class DijkstraVisualizer:
             info_frame,
             text=(
                 "Legend\n\n"
-                "Green  = Start\n"
-                "Red    = Goal\n"
-                "Black  = Obstacle\n"
+                "Green = Start\n"
+                "Red = Goal\n"
+                "Black = Obstacle\n"
                 "Yellow = Current Node\n"
-                "Blue   = Explored Node\n"
-                "Purple = Minimum Cost Path"
+                "Light Blue = Explored Node\n"
+                "Purple = Minimum Cost Path\n"
+                "Gray Row = Visited Node"
             ),
             font=("Arial", 11),
             justify="left"
         )
-        legend.pack(pady=20)
 
-        # Draw initial maze
+        legend.pack(
+            pady=20
+        )
+
+        # -------------------------------------------------
+        # Dijkstra Calculation Table
+        # -------------------------------------------------
+
+        table_frame = tk.Frame(main_frame)
+
+        table_frame.grid(
+            row=0,
+            column=2,
+            padx=20,
+            pady=20,
+            sticky="n"
+        )
+
+        table_title = tk.Label(
+            table_frame,
+            text="Dijkstra Calculation Table",
+            font=("Arial", 13, "bold")
+        )
+
+        table_title.pack(
+            pady=(0, 10)
+        )
+
+        # Create Treeview table
+        self.table = ttk.Treeview(
+            table_frame,
+            columns=(
+                "Node",
+                "Shortest Path",
+                "Previous Node"
+            ),
+            show="headings",
+            height=18
+        )
+
+        # Table headings
+        self.table.heading(
+            "Node",
+            text="Node"
+        )
+
+        self.table.heading(
+            "Shortest Path",
+            text="Shortest Path"
+        )
+
+        self.table.heading(
+            "Previous Node",
+            text="Previous Node"
+        )
+
+        # Table column sizes
+        self.table.column(
+            "Node",
+            width=100,
+            anchor="center"
+        )
+
+        self.table.column(
+            "Shortest Path",
+            width=110,
+            anchor="center"
+        )
+
+        self.table.column(
+            "Previous Node",
+            width=120,
+            anchor="center"
+        )
+
+        # Scrollbar
+        table_scrollbar = ttk.Scrollbar(
+            table_frame,
+            orient="vertical",
+            command=self.table.yview
+        )
+
+        self.table.configure(
+            yscrollcommand=table_scrollbar.set
+        )
+
+        self.table.pack(
+            side="left"
+        )
+
+        table_scrollbar.pack(
+            side="right",
+            fill="y"
+        )
+
+        # Gray style for visited nodes
+        self.table.tag_configure(
+            "visited",
+            background="lightgray"
+        )
+
+        # Draw maze
         self.draw_maze()
 
         # Initialize search data
@@ -203,31 +343,40 @@ class DijkstraVisualizer:
 
 
     # ---------------------------------------------------------
-    # Reset internal Dijkstra data
+    # Reset Search Data
     # ---------------------------------------------------------
 
     def reset_search_data(self):
         """
-        Clears all data used by Dijkstra's algorithm.
+        Clears all search-related data.
         """
 
         # Priority queue stores:
         # (cost, node, path)
         self.priority_queue = []
 
-        # Stores the minimum known cost to each node
+        # Minimum known cost for each node
         self.best_cost = {}
 
-        # Stores explored nodes
+        # Nodes already explored
         self.explored = set()
 
-        # Stores the final path
+        # Final shortest path
         self.final_path = None
 
-        # Search status
+        # Running status
         self.running = False
+
+        # Pause status
         self.paused = False
-        self.step_after_id = None
+
+        # Stores previous node for each discovered node
+        self.previous_node = {
+            START: None
+        }
+
+        # Stores Treeview row IDs for each node
+        self.table_rows = {}
 
 
     # ---------------------------------------------------------
@@ -236,7 +385,7 @@ class DijkstraVisualizer:
 
     def draw_maze(self):
         """
-        Draws the maze grid with start, goal
+        Draws the maze with start, goal
         and obstacle nodes.
         """
 
@@ -246,7 +395,10 @@ class DijkstraVisualizer:
 
             for col in range(GRID_COLS):
 
-                cell = (row, col)
+                cell = (
+                    row,
+                    col
+                )
 
                 x1 = col * self.cell_size
                 y1 = row * self.cell_size
@@ -257,12 +409,15 @@ class DijkstraVisualizer:
                 color = "white"
 
                 if cell in OBSTACLES:
+
                     color = "black"
 
                 elif cell == START:
+
                     color = "green"
 
                 elif cell == GOAL:
+
                     color = "red"
 
                 self.canvas.create_rectangle(
@@ -275,11 +430,15 @@ class DijkstraVisualizer:
                     width=2
                 )
 
-                text_color = "white" if color in [
-                    "black",
-                    "green",
-                    "red"
-                ] else "black"
+                text_color = (
+                    "white"
+                    if color in [
+                        "black",
+                        "green",
+                        "red"
+                    ]
+                    else "black"
+                )
 
                 self.canvas.create_text(
                     x1 + self.cell_size / 2,
@@ -291,18 +450,16 @@ class DijkstraVisualizer:
 
 
     # ---------------------------------------------------------
-    # Get Successor Nodes
+    # Get Successors
     # ---------------------------------------------------------
 
     def get_successors(self, node):
         """
-        Returns all valid successor nodes.
+        Returns all valid successor nodes
+        from the current node.
 
         Movement is allowed:
         Up, Down, Left and Right.
-
-        Obstacles and positions outside
-        the maze are ignored.
         """
 
         row, col = node
@@ -324,7 +481,10 @@ class DijkstraVisualizer:
                 and 0 <= new_col < GRID_COLS
                 and new_node not in OBSTACLES
             ):
-                successors.append(new_node)
+
+                successors.append(
+                    new_node
+                )
 
         return successors
 
@@ -340,12 +500,21 @@ class DijkstraVisualizer:
         """
 
         if self.running:
+
             return
 
+        # Clear old table rows
+        for row in self.table.get_children():
+
+            self.table.delete(row)
+
+        # Reset data
         self.reset_search_data()
+
+        # Redraw maze
         self.draw_maze()
 
-        # Add start node with cost 0
+        # Add start node to priority queue
         heapq.heappush(
             self.priority_queue,
             (
@@ -355,10 +524,22 @@ class DijkstraVisualizer:
             )
         )
 
-        # Minimum known cost to start is 0
+        # Cost of start node is 0
         self.best_cost = {
             START: 0
         }
+
+        # Previous node for start is None
+        self.previous_node = {
+            START: None
+        }
+
+        # Add start node to calculation table
+        self.update_calculation_table(
+            START,
+            0,
+            None
+        )
 
         self.running = True
         self.paused = False
@@ -370,34 +551,76 @@ class DijkstraVisualizer:
         self.start_button.config(
             state="disabled"
         )
+
         self.pause_button.config(
-            text="Pause",
-            state="normal"
+            state="normal",
+            text="Pause"
         )
 
-        # Start search
+        # Start algorithm
         self.dijkstra_step()
 
 
     # ---------------------------------------------------------
-    # Execute One Dijkstra Step
+    # Pause / Resume
+    # ---------------------------------------------------------
+
+    def toggle_pause(self):
+        """
+        Pauses or resumes the Dijkstra search.
+        """
+
+        if not self.running:
+
+            return
+
+        # Pause
+        if not self.paused:
+
+            self.paused = True
+
+            self.pause_button.config(
+                text="Resume"
+            )
+
+            self.status_label.config(
+                text="Search Paused"
+            )
+
+        # Resume
+        else:
+
+            self.paused = False
+
+            self.pause_button.config(
+                text="Pause"
+            )
+
+            self.status_label.config(
+                text="Search Resumed"
+            )
+
+            self.dijkstra_step()
+
+
+    # ---------------------------------------------------------
+    # Dijkstra Step
     # ---------------------------------------------------------
 
     def dijkstra_step(self):
         """
         Executes one step of Dijkstra's algorithm.
 
-        The node with the smallest cost is removed
-        from the priority queue and explored.
+        The node with the smallest accumulated cost
+        is removed from the priority queue.
         """
 
-        self.step_after_id = None
+        # Stop if paused
+        if self.paused:
 
-        if not self.running or self.paused:
             return
 
-        # If priority queue is empty,
-        # there is no path
+        # No more nodes to explore
         if not self.priority_queue:
 
             self.running = False
@@ -409,32 +632,39 @@ class DijkstraVisualizer:
             self.start_button.config(
                 state="normal"
             )
+
             self.pause_button.config(
                 state="disabled"
             )
 
             return
 
-        # Remove node with smallest cost
+        # Remove node with minimum cost
         current_cost, current, path = heapq.heappop(
             self.priority_queue
         )
 
-        # Ignore old queue entry if a cheaper
-        # path has already been discovered
+        # Ignore old queue entry if better cost exists
         if current_cost > self.best_cost[current]:
 
-            self.step_after_id = self.root.after(
+            self.root.after(
                 300,
                 self.dijkstra_step
             )
 
             return
 
-        # Mark node as explored
-        self.explored.add(current)
+        # Mark current node as explored
+        self.explored.add(
+            current
+        )
 
-        # Update GUI information
+        # Change table row to gray
+        self.mark_table_visited(
+            current
+        )
+
+        # Update labels
         self.current_label.config(
             text=f"Current Node: {current}"
         )
@@ -447,14 +677,18 @@ class DijkstraVisualizer:
             text=f"Explored Nodes: {len(self.explored)}"
         )
 
-        self.update_queue_display()
-
         self.status_label.config(
             text=f"Exploring {current}"
         )
 
+        # Update queue display
+        self.update_queue_display()
+
         # Highlight current node
-        if current != START and current != GOAL:
+        if (
+            current != START
+            and current != GOAL
+        ):
 
             self.highlight_cell(
                 current,
@@ -474,12 +708,13 @@ class DijkstraVisualizer:
             self.status_label.config(
                 text="Goal Reached!"
             )
-            self.pause_button.config(
-                state="disabled"
-            )
 
             self.final_cost_label.config(
                 text=f"Minimum Cost: {current_cost}"
+            )
+
+            self.pause_button.config(
+                state="disabled"
             )
 
             self.root.after(
@@ -490,12 +725,14 @@ class DijkstraVisualizer:
             return
 
         # -------------------------------------------------
-        # Expand Successor Nodes
+        # Expand Successors
         # -------------------------------------------------
 
-        for neighbor in self.get_successors(current):
+        for neighbor in self.get_successors(
+            current
+        ):
 
-            # Every move costs 1
+            # Every movement costs 1
             step_cost = 1
 
             new_cost = (
@@ -503,23 +740,38 @@ class DijkstraVisualizer:
                 + step_cost
             )
 
-            # If neighbor has not been discovered,
-            # or this route is cheaper
+            # If this is the first time the node
+            # has been discovered, or if a cheaper
+            # path has been found
             if (
                 neighbor not in self.best_cost
                 or new_cost < self.best_cost[neighbor]
             ):
 
-                # Update minimum known cost
-                self.best_cost[neighbor] = new_cost
+                # Store shortest known cost
+                self.best_cost[
+                    neighbor
+                ] = new_cost
 
-                # Create updated path
+                # Store previous node
+                self.previous_node[
+                    neighbor
+                ] = current
+
+                # Update calculation table
+                self.update_calculation_table(
+                    neighbor,
+                    new_cost,
+                    current
+                )
+
+                # Store updated path
                 new_path = (
                     path
                     + [neighbor]
                 )
 
-                # Add successor to priority queue
+                # Add node to priority queue
                 heapq.heappush(
                     self.priority_queue,
                     (
@@ -529,8 +781,12 @@ class DijkstraVisualizer:
                     )
                 )
 
-        # Change current node to explored color
-        if current != START and current != GOAL:
+        # After exploring, change current node
+        # from yellow to light blue
+        if (
+            current != START
+            and current != GOAL
+        ):
 
             self.root.after(
                 300,
@@ -541,46 +797,21 @@ class DijkstraVisualizer:
                 )
             )
 
-        # Continue search
-        self.step_after_id = self.root.after(
+        # Continue algorithm
+        self.root.after(
             700,
             self.dijkstra_step
         )
 
 
     # ---------------------------------------------------------
-    # Pause or resume Dijkstra
-    # ---------------------------------------------------------
-
-    def toggle_pause(self):
-
-        if not self.running:
-            return
-
-        if self.paused:
-            self.paused = False
-            self.pause_button.config(text="Pause")
-            self.status_label.config(text="Dijkstra Search Resumed...")
-            self.dijkstra_step()
-            return
-
-        self.paused = True
-        self.pause_button.config(text="Resume")
-        self.status_label.config(text="Dijkstra Search Paused")
-
-        if self.step_after_id is not None:
-            self.root.after_cancel(self.step_after_id)
-            self.step_after_id = None
-
-
-    # ---------------------------------------------------------
-    # Display Priority Queue
+    # Update Priority Queue
     # ---------------------------------------------------------
 
     def update_queue_display(self):
         """
-        Displays the contents of the priority queue
-        showing both node and accumulated cost.
+        Displays nodes currently in the priority queue
+        along with their accumulated cost.
         """
 
         queue_items = []
@@ -595,7 +826,9 @@ class DijkstraVisualizer:
 
         if queue_items:
 
-            queue_text = "\n".join(queue_items)
+            queue_text = "\n".join(
+                queue_items
+            )
 
         else:
 
@@ -610,13 +843,111 @@ class DijkstraVisualizer:
 
 
     # ---------------------------------------------------------
+    # Update Calculation Table
+    # ---------------------------------------------------------
+
+    def update_calculation_table(
+        self,
+        node,
+        shortest_path,
+        previous_node
+    ):
+        """
+        Adds a node to the Dijkstra calculation table
+        or updates it if the node already exists.
+
+        Columns:
+        Node
+        Shortest Path
+        Previous Node
+        """
+
+        node_text = str(
+            node
+        )
+
+        if previous_node is None:
+
+            previous_text = "None"
+
+        else:
+
+            previous_text = str(
+                previous_node
+            )
+
+        # Update existing row
+        if node in self.table_rows:
+
+            row_id = self.table_rows[
+                node
+            ]
+
+            self.table.item(
+                row_id,
+                values=(
+                    node_text,
+                    shortest_path,
+                    previous_text
+                )
+            )
+
+        # Add new row
+        else:
+
+            row_id = self.table.insert(
+                "",
+                "end",
+                values=(
+                    node_text,
+                    shortest_path,
+                    previous_text
+                )
+            )
+
+            self.table_rows[
+                node
+            ] = row_id
+
+
+    # ---------------------------------------------------------
+    # Mark Table Row as Visited
+    # ---------------------------------------------------------
+
+    def mark_table_visited(
+        self,
+        node
+    ):
+        """
+        Changes the row colour to gray
+        after the node has been visited.
+        """
+
+        if node in self.table_rows:
+
+            row_id = self.table_rows[
+                node
+            ]
+
+            self.table.item(
+                row_id,
+                tags=(
+                    "visited",
+                )
+            )
+
+
+    # ---------------------------------------------------------
     # Highlight Cell
     # ---------------------------------------------------------
 
-    def highlight_cell(self, cell, color):
+    def highlight_cell(
+        self,
+        cell,
+        color
+    ):
         """
-        Changes the color of a maze cell
-        to show search progress.
+        Changes the colour of a maze cell.
         """
 
         row, col = cell
@@ -629,10 +960,12 @@ class DijkstraVisualizer:
 
         # Keep start green
         if cell == START:
+
             color = "green"
 
         # Keep goal red
         elif cell == GOAL:
+
             color = "red"
 
         self.canvas.create_rectangle(
@@ -645,12 +978,16 @@ class DijkstraVisualizer:
             width=2
         )
 
-        text_color = "white" if color in [
-            "green",
-            "red",
-            "purple",
-            "black"
-        ] else "black"
+        text_color = (
+            "white"
+            if color in [
+                "green",
+                "red",
+                "purple",
+                "black"
+            ]
+            else "black"
+        )
 
         self.canvas.create_text(
             x1 + self.cell_size / 2,
@@ -662,16 +999,17 @@ class DijkstraVisualizer:
 
 
     # ---------------------------------------------------------
-    # Show Final Minimum Cost Path
+    # Show Final Path
     # ---------------------------------------------------------
 
     def show_final_path(self):
         """
-        Highlights the final minimum-cost path
-        discovered by Dijkstra.
+        Displays the minimum-cost path
+        using purple cells.
         """
 
         if not self.final_path:
+
             return
 
         for cell in self.final_path:
@@ -715,21 +1053,25 @@ class DijkstraVisualizer:
 
     def reset(self):
         """
-        Resets the maze and clears all
+        Resets the maze, table and all
         Dijkstra search information.
         """
-
-        if self.step_after_id is not None:
-            self.root.after_cancel(self.step_after_id)
-            self.step_after_id = None
 
         self.running = False
         self.paused = False
 
+        # Clear table
+        for row in self.table.get_children():
+
+            self.table.delete(row)
+
+        # Reset search data
         self.reset_search_data()
 
+        # Redraw maze
         self.draw_maze()
 
+        # Reset labels
         self.status_label.config(
             text="Press Start Dijkstra"
         )
@@ -757,9 +1099,10 @@ class DijkstraVisualizer:
         self.start_button.config(
             state="normal"
         )
+
         self.pause_button.config(
-            text="Pause",
-            state="disabled"
+            state="disabled",
+            text="Pause"
         )
 
 
@@ -769,6 +1112,8 @@ class DijkstraVisualizer:
 
 root = tk.Tk()
 
-app = DijkstraVisualizer(root)
+app = DijkstraVisualizer(
+    root
+)
 
 root.mainloop()
