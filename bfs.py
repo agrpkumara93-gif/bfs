@@ -169,6 +169,19 @@ class BFSVisualizer:
             pady=10
         )
 
+        self.pause_button = tk.Button(
+            info_frame,
+            text="Pause",
+            font=("Arial", 12),
+            width=15,
+            command=self.toggle_pause,
+            state="disabled"
+        )
+
+        self.pause_button.pack(
+            pady=5
+        )
+
         self.reset_button = tk.Button(
             info_frame,
             text="Reset",
@@ -232,6 +245,8 @@ class BFSVisualizer:
 
         # Search running status
         self.running = False
+        self.paused = False
+        self.step_after_id = None
 
 
     # ---------------------------------------------------------
@@ -317,6 +332,7 @@ class BFSVisualizer:
         )
 
         self.running = True
+        self.paused = False
 
         self.status_label.config(
             text="BFS Search Started..."
@@ -324,6 +340,10 @@ class BFSVisualizer:
 
         self.start_button.config(
             state="disabled"
+        )
+        self.pause_button.config(
+            text="Pause",
+            state="normal"
         )
 
         # Start animation
@@ -336,6 +356,11 @@ class BFSVisualizer:
 
     def bfs_step(self):
 
+        self.step_after_id = None
+
+        if not self.running or self.paused:
+            return
+
         # If queue becomes empty, no solution exists
         if not self.queue:
 
@@ -347,6 +372,9 @@ class BFSVisualizer:
 
             self.start_button.config(
                 state="normal"
+            )
+            self.pause_button.config(
+                state="disabled"
             )
 
             return
@@ -399,6 +427,9 @@ class BFSVisualizer:
 
             self.status_label.config(
                 text="Goal Found!"
+            )
+            self.pause_button.config(
+                state="disabled"
             )
 
             self.cost_label.config(
@@ -470,10 +501,35 @@ class BFSVisualizer:
             )
 
         # Continue BFS after delay
-        self.root.after(
+        self.step_after_id = self.root.after(
             700,
             self.bfs_step
         )
+
+
+    # ---------------------------------------------------------
+    # Pause or resume BFS
+    # ---------------------------------------------------------
+
+    def toggle_pause(self):
+
+        if not self.running:
+            return
+
+        if self.paused:
+            self.paused = False
+            self.pause_button.config(text="Pause")
+            self.status_label.config(text="BFS Search Resumed...")
+            self.bfs_step()
+            return
+
+        self.paused = True
+        self.pause_button.config(text="Resume")
+        self.status_label.config(text="BFS Search Paused")
+
+        if self.step_after_id is not None:
+            self.root.after_cancel(self.step_after_id)
+            self.step_after_id = None
 
 
     # ---------------------------------------------------------
@@ -575,7 +631,12 @@ class BFSVisualizer:
 
     def reset(self):
 
+        if self.step_after_id is not None:
+            self.root.after_cancel(self.step_after_id)
+            self.step_after_id = None
+
         self.running = False
+        self.paused = False
 
         self.reset_search_data()
 
@@ -603,6 +664,10 @@ class BFSVisualizer:
 
         self.start_button.config(
             state="normal"
+        )
+        self.pause_button.config(
+            text="Pause",
+            state="disabled"
         )
 
 
