@@ -2,6 +2,8 @@ from collections import deque
 import tkinter as tk
 from tkinter import messagebox
 
+from bfs_pure import find_bfs_path
+
 
 # ---------------------------------------------------------
 # Maze Configuration
@@ -242,6 +244,15 @@ class BFSVisualizer:
 
         # Final solution path
         self.final_path = None
+
+        # Reference path computed by the pure BFS implementation
+        self.reference_path = find_bfs_path(
+            GRID_ROWS,
+            GRID_COLS,
+            START,
+            GOAL,
+            OBSTACLES
+        )
 
         # Search running status
         self.running = False
@@ -675,8 +686,9 @@ class BFSVisualizer:
 # Start Application
 # ---------------------------------------------------------
 
-root = tk.Tk()
+if __name__ == "__main__":
+    root = tk.Tk()
 
-app = BFSVisualizer(root)
+    app = BFSVisualizer(root)
 
-root.mainloop()
+    root.mainloop()
