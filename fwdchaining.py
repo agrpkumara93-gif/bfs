@@ -38,31 +38,18 @@ for row in range(GRID_ROWS):
 # Get Adjacent Nodes
 # ---------------------------------------------------------
 
-def get_adjacent_nodes(node):
-    """
-    Returns all nodes that are directly adjacent
-    to the current node.
-
-    Allowed directions:
-    Up, Down, Left, Right
-    """
-
+def get_adjacent_nodes(node): 
     row, col = node
-
     directions = [
         (-1, 0),   # Up
         (1, 0),    # Down
         (0, -1),   # Left
         (0, 1)     # Right
     ]
-
     adjacent_nodes = []
-
     for dr, dc in directions:
-
         new_row = row + dr
         new_col = col + dc
-
         if (
             0 <= new_row < GRID_ROWS
             and 0 <= new_col < GRID_COLS
