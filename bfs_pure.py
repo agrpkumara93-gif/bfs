@@ -31,7 +31,7 @@ GRID_COLS = 6
 START = (0, 0)
 GOAL = (4, 5)
 
-OBSTACLES = {(0, 1), (2, 1), (2, 3), (3, 1), (3, 4), (4, 4)}
+OBSTACLES = {(0, 1),(2, 1), (2, 3), (3, 1), (3, 4), (4, 4)}
 
 
 def print_maze(rows, cols, start, goal, obstacles, path):
