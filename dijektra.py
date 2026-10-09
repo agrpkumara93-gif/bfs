@@ -534,13 +534,6 @@ class DijkstraVisualizer:
             START: None
         }
 
-        # Add start node to calculation table
-        self.update_calculation_table(
-            START,
-            0,
-            None
-        )
-
         self.running = True
         self.paused = False
 
@@ -659,6 +652,13 @@ class DijkstraVisualizer:
             current
         )
 
+        # Record the node when it is explored, in priority-queue order
+        self.update_calculation_table(
+            current,
+            current_cost,
+            self.previous_node[current]
+        )
+
         # Change table row to gray
         self.mark_table_visited(
             current
@@ -757,13 +757,6 @@ class DijkstraVisualizer:
                 self.previous_node[
                     neighbor
                 ] = current
-
-                # Update calculation table
-                self.update_calculation_table(
-                    neighbor,
-                    new_cost,
-                    current
-                )
 
                 # Store updated path
                 new_path = (
