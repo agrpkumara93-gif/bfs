@@ -6,7 +6,7 @@ from bfs_pure import find_bfs_path
 
 
 # ---------------------------------------------------------
-# Maze Configuration
+# Maze Configuration is updated
 # ---------------------------------------------------------
 
 GRID_ROWS = 5
